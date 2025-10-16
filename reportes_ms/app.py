@@ -9,22 +9,17 @@ import pandas as pd
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
-# -------------------- CONFIGURACIÓN --------------------
-
-# Cargar variables de entorno (.env)
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Conexión a MongoDB
+
 mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = mongo_client[os.getenv("DB_NAME")]
 reportes_collection = db.reportes
 
-# -------------------- ENDPOINTS --------------------
 
-# 1️⃣ Crear un nuevo reporte manual
 @app.route('/reportes', methods=['POST'])
 def crear_reporte():
     data = request.get_json()
@@ -38,7 +33,7 @@ def crear_reporte():
     return jsonify({"mensaje": "Reporte creado correctamente", "id": str(result.inserted_id)}), 201
 
 
-# 2️⃣ Listar todos los reportes
+
 @app.route('/reportes', methods=['GET'])
 def listar_reportes():
     reportes = []
@@ -48,7 +43,7 @@ def listar_reportes():
     return jsonify(reportes)
 
 
-# 3️⃣ Obtener un reporte por ID
+
 @app.route('/reportes/<id>', methods=['GET'])
 def obtener_reporte(id):
     reporte = reportes_collection.find_one({"_id": ObjectId(id)})
@@ -58,7 +53,7 @@ def obtener_reporte(id):
     return jsonify({"mensaje": "Reporte no encontrado"}), 404
 
 
-# 4️⃣ Generar un reporte simulado (por ejemplo, datos de un mes)
+
 @app.route('/reportes/generar', methods=['GET'])
 def generar_reporte_simulado():
     datos = {
@@ -75,15 +70,14 @@ def generar_reporte_simulado():
     result = reportes_collection.insert_one(nuevo_reporte)
     return jsonify({"mensaje": "Reporte simulado creado", "id": str(result.inserted_id)})
 
-# -------------------------------------------------------
-# 5️⃣ Exportar reporte a PDF
+
 @app.route('/reportes/<id>/pdf', methods=['GET'])
 def exportar_pdf(id):
     reporte = reportes_collection.find_one({"_id": ObjectId(id)})
     if not reporte:
         return jsonify({"mensaje": "Reporte no encontrado"}), 404
 
-    # Crear PDF en memoria
+
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer)
     pdf.setTitle("Reporte Spa")
@@ -105,18 +99,16 @@ def exportar_pdf(id):
 
     return send_file(buffer, as_attachment=True, download_name="reporte.pdf", mimetype='application/pdf')
 
-# -------------------------------------------------------
-# 6️⃣ Exportar reporte a Excel
+
 @app.route('/reportes/<id>/excel', methods=['GET'])
 def exportar_excel(id):
     reporte = reportes_collection.find_one({"_id": ObjectId(id)})
     if not reporte:
         return jsonify({"mensaje": "Reporte no encontrado"}), 404
 
-    # Convertir datos del reporte a DataFrame
     df = pd.DataFrame(list(reporte.get("resultado", {}).items()), columns=["Indicador", "Valor"])
 
-    # Guardar en Excel en memoria
+ 
     buffer = BytesIO()
     with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
         df.to_excel(writer, index=False, sheet_name='Reporte')
@@ -124,7 +116,32 @@ def exportar_excel(id):
 
     return send_file(buffer, as_attachment=True, download_name="reporte.xlsx", mimetype='application/vnd.ms-excel')
 
-# -------------------------------------------------------
+#las  siguientes rutas son solo para hacer la prueba sin tener en cuenta el id 
+
+@app.route('/reportes/pdf', methods=['GET'])
+def generar_pdf_general():
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer)
+    pdf.drawString(100, 800, "REPORTE GENERAL DE PRUEBA - PDF")
+    pdf.showPage()
+    pdf.save()
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name="reporte_prueba.pdf", mimetype='application/pdf')
+
+
+@app.route('/reportes/excel', methods=['GET'])
+def generar_excel_general():
+    df = pd.DataFrame([
+        {"Indicador": "Reservas", "Valor": 100},
+        {"Indicador": "Ingresos", "Valor": 5000000}
+    ])
+    buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Reporte')
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name="reporte_prueba.xlsx", mimetype='application/vnd.ms-excel')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
