@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\GatewayController;
 
 Route::prefix('auth')->group(function () {
@@ -8,6 +7,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/create_user', [GatewayController::class, 'auth_create_user']);
     Route::post('/change_password', [GatewayController::class, 'auth_change_password']);
     Route::post('/forgot_password', [GatewayController::class, 'auth_forgot']);
+    Route::post('/reset_password', [GatewayController::class, 'auth_reset']);
 });
 
 Route::prefix('servicios')->group(function () {
