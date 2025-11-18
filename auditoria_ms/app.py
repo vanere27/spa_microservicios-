@@ -7,6 +7,9 @@ import os
 import datetime
 
 
+API_KEY = os.getenv("API_KEY")
+
+
 # Cargar variables de entorno (.env)
 load_dotenv()
 
@@ -17,6 +20,12 @@ CORS(app)
 mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = mongo_client[os.getenv("DB_NAME")]
 logs_collection = db.auditoria
+
+@app.before_request
+def validar_api_key():
+    key = request.headers.get("X-API-Key")
+    if key != API_KEY:
+        return jsonify({"error": "Acceso no autorizado"}), 401
 
 
 # Registrar un nuevo evento (log)

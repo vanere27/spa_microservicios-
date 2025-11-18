@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_mail import Mail, Message
+import os
+API_KEY = os.getenv("API_KEY")
+
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +18,11 @@ app.config['MAIL_DEFAULT_SENDER'] = ('Notificaciones VitalCare', 'spadeunas376@g
 
 mail = Mail(app)
 
+@app.before_request
+def validar_api_key():
+    key = request.headers.get("X-API-Key")
+    if key != API_KEY:
+        return jsonify({"error": "Acceso no autorizado"}), 401
 @app.route('/')
 def home():
     return jsonify({'message': 'Microservicio de notificaciones activo 🚀'})

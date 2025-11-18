@@ -9,6 +9,8 @@ import pandas as pd
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
+
+API_KEY = os.getenv("API_KEY")
 load_dotenv()
 
 app = Flask(__name__)
@@ -19,6 +21,11 @@ mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = mongo_client[os.getenv("DB_NAME")]
 reportes_collection = db.reportes
 
+@app.before_request
+def validar_api_key():
+    key = request.headers.get("X-API-Key")
+    if key != API_KEY:
+        return jsonify({"error": "Acceso no autorizado"}), 401
 
 @app.route('/reportes', methods=['POST'])
 def crear_reporte():

@@ -1,12 +1,32 @@
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from bson import ObjectId
+from dotenv import load_dotenv
+from flask_cors import CORS
 import datetime
+import os
+import pandas as pd
+from reportlab.pdfgen import canvas
+
+
+
+
+API_KEY = os.getenv("API_KEY")
+
 
 app = Flask(__name__)
-client = MongoClient("mongodb://localhost:27017/")
-db = client["spa_reservas"]
-reservas_collection = db["reservas"]
+CORS(app)
+load_dotenv()
+
+mongo_client = MongoClient(os.getenv("MONGO_URI"))
+db = mongo_client[os.getenv("DB_NAME")]
+reservas_collection = db.reservas
+
+@app.before_request
+def validar_api_key():
+    key = request.headers.get("X-API-Key")
+    if key != API_KEY:
+        return jsonify({"error": "Acceso no autorizado"}), 401
 
 
 # Ruta de prueba
