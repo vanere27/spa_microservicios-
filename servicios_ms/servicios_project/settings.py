@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.apikey_middleware.ApiKeyMiddleware'
+    'servicios.middleware.ApiKeyMiddleware',
     
 ]
 
