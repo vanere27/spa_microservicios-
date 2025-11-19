@@ -11,12 +11,10 @@ from reportlab.pdfgen import canvas
 
 
 
-API_KEY = os.getenv("API_KEY")
-
-
 app = Flask(__name__)
 CORS(app)
 load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
 mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = mongo_client[os.getenv("DB_NAME")]
@@ -24,6 +22,8 @@ reservas_collection = db.reservas
 
 @app.before_request
 def validar_api_key():
+    if not API_KEY:
+        pass
     key = request.headers.get("X-API-Key")
     if key != API_KEY:
         return jsonify({"error": "Acceso no autorizado"}), 401
