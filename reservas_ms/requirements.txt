@@ -1,0 +1,6 @@
+Flask
+pymongo
+flask-cors
+pandas
+python-dotenv
+reportlab
