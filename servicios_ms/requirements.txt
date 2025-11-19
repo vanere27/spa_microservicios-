@@ -1,0 +1,4 @@
+djangorestframework
+mysqlclient
+python-dotenv
+Django
