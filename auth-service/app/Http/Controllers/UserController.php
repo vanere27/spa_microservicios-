@@ -16,20 +16,20 @@ use Carbon\Carbon;
 class UserController extends Controller
 {
     public function create_user(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'required|string|in:Administrador,Empleado,Cliente'
-        ]);
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:100',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+                'role' => 'required|string|in:Administrador,Empleado,Cliente'
+            ]);
 
-        $role = Role::where('name', $validated['role'])->first();
-        if (! $role) {
-            return response()->json([
-                'message' => 'El rol especificado no existe en el sistema.'
-            ], 404);
+            $role = Role::where('name', $validated['role'])->first();
+            if (! $role) {
+                return response()->json([
+                    'message' => 'El rol especificado no existe en el sistema.'
+                ], 404);
         }
 
         $user = new User();
@@ -52,19 +52,19 @@ class UserController extends Controller
             'access_token' => $token
         ], 201);
 
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'message' => 'Error de validación',
-            'errors' => $e->errors()
-        ], 422);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Error interno del servidor',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error interno del servidor',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }   
 
     public function login(Request $request)
     {
