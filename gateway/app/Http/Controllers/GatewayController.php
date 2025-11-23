@@ -52,19 +52,19 @@ class GatewayController extends Controller
 
     // ========================= AUTH =========================
 
+    public function createUser(Request $req)
+    {
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/create_user", $req);
+    }
+
     public function login(Request $req)
     {
-        return $this->forward("post", "$this->auth/login", $req);
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/login", $req);
     }
 
     public function logout(Request $req)
     {
-        return $this->forward("post", "$this->auth/logout", $req);
-    }
-
-    public function createUser(Request $req)
-    {
-        return $this->forward("post", "$this->auth/create_user", $req);
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/logout", $req);
     }
 
     public function forgotPassword(Request $req)
@@ -207,27 +207,27 @@ class GatewayController extends Controller
 
     public function auditoriaIndex(Request $req)
     {
-        return $this->forward("get", "$this->auditoria/logs", $req);
+        return $this->forward("get", $this->auditoria . "/logs", $req);
     }
 
     public function auditoriaStore(Request $req)
     {
-        return $this->forward("post", "$this->auditoria/logs", $req);
+        return $this->forward("post", $this->auditoria . "/logs", $req);
     }
 
     public function auditoriaShow($id, Request $req)
     {
-        return $this->forward("get", "$this->auditoria/logs/$id", $req);
+        return $this->forward("get", $this->auditoria . "/logs/" . $id, $req);
     }
 
     public function auditoriaByUser($usuario, Request $req)
     {
-        return $this->forward("get", "$this->auditoria/logs/usuario/$usuario", $req);
+        return $this->forward("get", $this->auditoria . "/logs/usuario/" . $usuario, $req);
     }
 
     public function auditoriaDelete($id, Request $req)
     {
-        return $this->forward("delete", "$this->auditoria/logs/$id", $req);
+        return $this->forward("delete", $this->auditoria . "/logs/" . $id, $req);
     }
 
 

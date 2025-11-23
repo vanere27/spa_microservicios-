@@ -151,4 +151,4 @@ def generar_excel_general():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5005)
+    app.run(host="0.0.0.0", port=5005, debug=True, use_reloader=False)

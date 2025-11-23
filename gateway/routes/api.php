@@ -3,12 +3,13 @@
 use App\Http\Controllers\GatewayController;
 
 // AUTH
-Route::post('auth/login', [GatewayController::class, 'login']);
-Route::post('auth/logout', [GatewayController::class, 'logout']);
-Route::post('auth/create_user', [GatewayController::class, 'createUser']);
-Route::post('auth/forgot', [GatewayController::class, 'forgotPassword']);
-Route::post('auth/reset', [GatewayController::class, 'resetPassword']);
-
+Route::prefix('api/auth')->group(function () {
+    Route::post('auth/login', [GatewayController::class, 'login']);
+    Route::post('auth/logout', [GatewayController::class, 'logout']);
+    Route::post('auth/create_user', [GatewayController::class, 'createUser']);
+    Route::post('auth/forgot', [GatewayController::class, 'forgotPassword']);
+    Route::post('auth/reset', [GatewayController::class, 'resetPassword']);
+});
 // SERVICIOS
 Route::get('servicios', [GatewayController::class, 'serviciosIndex']);
 Route::post('servicios', [GatewayController::class, 'serviciosStore']);
@@ -17,7 +18,7 @@ Route::delete('servicios/{id}', [GatewayController::class, 'serviciosDelete']);
 Route::get('servicios/{id}', [GatewayController::class, 'serviciosShow']);
 
 
-// RESERVAS A TRAVÉS DEL GATEWAY
+// RESERVAS 
 Route::prefix('reservas')->group(function () {
     Route::get('/', [GatewayController::class, 'reservasIndex']);          // listar
     Route::post('/', [GatewayController::class, 'reservasStore']);         // crear
@@ -33,11 +34,15 @@ Route::get('reportes/excel', [GatewayController::class, 'reporteExcel']);
 
 
 // AUDITORÍA
+// AUDITORÍA
 Route::get('auditoria', [GatewayController::class, 'auditoriaIndex']);
 Route::post('auditoria', [GatewayController::class, 'auditoriaStore']);
-Route::get('auditoria/{id}', [GatewayController::class, 'auditoriaShow']);
+
 Route::get('auditoria/usuario/{usuario}', [GatewayController::class, 'auditoriaByUser']);
+
+Route::get('auditoria/{id}', [GatewayController::class, 'auditoriaShow']);
 Route::delete('auditoria/{id}', [GatewayController::class, 'auditoriaDelete']);
+
 
 
 // NOTIFICACIONES

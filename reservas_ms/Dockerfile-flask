@@ -8,5 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 5001
-ENTRYPOINT ["python"]
-CMD ["app.py"]
+CMD ["python", "app.py"]

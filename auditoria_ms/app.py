@@ -7,7 +7,7 @@ import os
 import datetime
 
 
-API_KEY = os.getenv("API_KEY")
+
 
 
 # Cargar variables de entorno (.env)
@@ -15,7 +15,7 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-
+API_KEY = os.getenv("API_KEY")
 # Conectar a MongoDB
 mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = mongo_client[os.getenv("DB_NAME")]
@@ -107,4 +107,4 @@ def eliminar_log(id):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5003)
+    app.run(host="0.0.0.0", port=5003, debug=True, use_reloader=False)
