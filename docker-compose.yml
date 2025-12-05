@@ -37,18 +37,10 @@ services:
     networks:
       - spa_network
     healthcheck:
-<<<<<<< HEAD
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
-=======
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
->>>>>>> desarrollo
   # =======================
   # GATEWAY LARAVEL
   # =======================
@@ -64,7 +56,6 @@ services:
     volumes:
       - ./gateway:/var/www/html
     depends_on:
-<<<<<<< HEAD
       auth:
         condition: service_started
       servicios:
@@ -79,17 +70,6 @@ services:
         condition: service_started
     networks:
       - spa_network
-=======
-      - auth
-      - servicios
-      - reservas
-      - auditoria
-      - reportes
-      - notificaciones
-    networks:
-      - spa_network
-
->>>>>>> desarrollo
 
   # =======================
   # AUTH (LARAVEL)
@@ -105,16 +85,8 @@ services:
       - ./auth-service/.env
     depends_on:
       - mysql
-<<<<<<< HEAD
     networks:
       - spa_network
-=======
-    command: >
-      sh -c "dockerize -wait tcp://mysql:3306 -timeout 60s php artisan serve --host=0.0.0.0 --port=8001"
-    networks:
-      - spa_network
-
->>>>>>> desarrollo
 
   # =======================
   # SERVICIOS (DJANGO)
@@ -147,17 +119,10 @@ services:
       - ./reservas_ms/.env
     command: ["python", "app.py"]
     depends_on:
-<<<<<<< HEAD
       mongo:
         condition: service_healthy
     networks:
       - spa_network
-=======
-      - mongo
-    networks:
-      - spa_network
-
->>>>>>> desarrollo
 
   # =======================
   # AUDITORÍA (FLASK)
@@ -178,10 +143,6 @@ services:
         condition: service_healthy
     networks:
       - spa_network
-<<<<<<< HEAD
-=======
-
->>>>>>> desarrollo
 
   # =======================
   # REPORTES (FLASK)
@@ -197,12 +158,8 @@ services:
       - ./reportes_ms/.env
     command: ["python", "app.py"]
     depends_on:
-<<<<<<< HEAD
       mongo:
         condition: service_healthy
-=======
-      - mongo
->>>>>>> desarrollo
     networks:
       - spa_network
 
@@ -220,12 +177,8 @@ services:
       - ./ms_notificaciones/.env
     command: ["python", "app.py"]
     depends_on:
-<<<<<<< HEAD
       mongo:
         condition: service_healthy
-=======
-      - mongo
->>>>>>> desarrollo
     networks:
       - spa_network
 
@@ -235,7 +188,6 @@ services:
 volumes:
   mysql_data:
   mongo_data:
-<<<<<<< HEAD
 
 # =======================
 # NETWORK
@@ -243,8 +195,3 @@ volumes:
 networks:
   spa_network:
     driver: bridge
-=======
-networks:
-  spa_network:
-    driver: bridge
->>>>>>> desarrollo
