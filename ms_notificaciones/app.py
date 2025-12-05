@@ -42,10 +42,11 @@ def enviar_correo():
         msg.body = mensaje
         mail.send(msg)
 
-        return jsonify({'status': 'Correo enviado exitosamente ✅'}), 200
+        return jsonify({'status': 'Correo enviado exitosamente'}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=5004, debug=True)
+    app.run(host="0.0.0.0", port=5004, debug=True)
+

@@ -1,9 +1,9 @@
-version: '3.9'
-
+version: '3.8'
 
 services:
+
   # =======================
-  # Contenedor MySQL
+  # MYSQL
   # =======================
   mysql:
     image: mysql:8.0
@@ -22,11 +22,12 @@ services:
       - spa_network
 
   # =======================
-  # Contenedor MongoDB
+  # MONGODB
   # =======================
   mongo:
     image: mongo:6.0
     container_name: mongo
+    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -35,13 +36,12 @@ services:
     networks:
       - spa_network
     healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
-
   # =======================
-  # Gateway Laravel
+  # GATEWAY LARAVEL
   # =======================
   gateway:
     build:
@@ -55,18 +55,23 @@ services:
     volumes:
       - ./gateway:/var/www/html
     depends_on:
-      - auth
-      - servicios
-      - reservas
-      - auditoria
-      - reportes
-      - notificaciones
+      auth:
+        condition: service_started
+      servicios:
+        condition: service_started
+      reservas:
+        condition: service_started
+      auditoria:
+        condition: service_started
+      reportes:
+        condition: service_started
+      notificaciones:
+        condition: service_started
     networks:
       - spa_network
 
-
   # =======================
-  # Microservicio Auth
+  # AUTH (LARAVEL)
   # =======================
   auth:
     build:
@@ -74,19 +79,16 @@ services:
       dockerfile: Dockerfile-laravel
     container_name: auth
     ports:
-      - "8001:8001"
+      - "8001:8001"   
     env_file:
       - ./auth-service/.env
     depends_on:
       - mysql
-    command: >
-      sh -c "dockerize -wait tcp://mysql:3306 -timeout 60s php artisan serve --host=0.0.0.0 --port=8001"
     networks:
       - spa_network
 
-
   # =======================
-  # Microservicio Servicios (Django)
+  # SERVICIOS (DJANGO)
   # =======================
   servicios:
     build:
@@ -103,7 +105,7 @@ services:
       - spa_network
 
   # =======================
-  # Microservicio Reservas (Flask)
+  # RESERVAS (FLASK)
   # =======================
   reservas:
     build:
@@ -116,13 +118,13 @@ services:
       - ./reservas_ms/.env
     command: ["python", "app.py"]
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - spa_network
 
-
   # =======================
-  # Microservicio Auditoría (Flask)
+  # AUDITORÍA (FLASK)
   # =======================
   auditoria:
     build:
@@ -134,16 +136,14 @@ services:
     env_file:
       - ./auditoria_ms/.env
     command: ["python", "app.py"]
-    restart: always
     depends_on:
       mongo:
         condition: service_healthy
     networks:
       - spa_network
 
-
   # =======================
-  # Microservicio Reportes (Flask)
+  # REPORTES (FLASK)
   # =======================
   reportes:
     build:
@@ -156,12 +156,13 @@ services:
       - ./reportes_ms/.env
     command: ["python", "app.py"]
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - spa_network
 
   # =======================
-  # Microservicio Notificaciones (Flask)
+  # NOTIFICACIONES (FLASK)
   # =======================
   notificaciones:
     build:
@@ -174,16 +175,21 @@ services:
       - ./ms_notificaciones/.env
     command: ["python", "app.py"]
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - spa_network
 
 # =======================
-# Volúmenes persistentes
+# VOLUMES
 # =======================
 volumes:
   mysql_data:
   mongo_data:
+
+# =======================
+# NETWORK
+# =======================
 networks:
   spa_network:
     driver: bridge

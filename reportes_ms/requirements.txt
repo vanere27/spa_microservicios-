@@ -4,3 +4,4 @@ flask-cors
 pandas
 reportlab
 python-dotenv
+xlsxwriter

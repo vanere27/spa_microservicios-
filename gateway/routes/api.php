@@ -3,19 +3,21 @@
 use App\Http\Controllers\GatewayController;
 
 // AUTH
-Route::prefix('api/auth')->group(function () {
-    Route::post('auth/login', [GatewayController::class, 'login']);
-    Route::post('auth/logout', [GatewayController::class, 'logout']);
-    Route::post('auth/create_user', [GatewayController::class, 'createUser']);
-    Route::post('auth/forgot', [GatewayController::class, 'forgotPassword']);
-    Route::post('auth/reset', [GatewayController::class, 'resetPassword']);
+Route::prefix('auth')->group(function () {
+    Route::post('login', [GatewayController::class, 'login']);
+    Route::post('logout', [GatewayController::class, 'logout']);
+    Route::post('create_user', [GatewayController::class, 'createUser']);
+    Route::post('forgot', [GatewayController::class, 'forgotPassword']);
+    Route::post('reset', [GatewayController::class, 'resetPassword']);
 });
+
+
 // SERVICIOS
-Route::get('servicios', [GatewayController::class, 'serviciosIndex']);
-Route::post('servicios', [GatewayController::class, 'serviciosStore']);
-Route::put('servicios/{id}', [GatewayController::class, 'serviciosUpdate']);
-Route::delete('servicios/{id}', [GatewayController::class, 'serviciosDelete']);
-Route::get('servicios/{id}', [GatewayController::class, 'serviciosShow']);
+Route::get('servicios/', [GatewayController::class, 'serviciosIndex']);
+Route::post('servicios/', [GatewayController::class, 'serviciosStore']);
+Route::put('servicios/{id}/', [GatewayController::class, 'serviciosUpdate']);
+Route::delete('servicios/{id}/', [GatewayController::class, 'serviciosDelete']);
+Route::get('servicios/{id}/', [GatewayController::class, 'serviciosShow']);
 
 
 // RESERVAS 

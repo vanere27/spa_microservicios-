@@ -54,49 +54,48 @@ class GatewayController extends Controller
 
     public function createUser(Request $req)
     {
-        return $this->forward("post", env('AUTH_SERVICE_URL')."/create_user", $req);
+        return $this->forward("post", "{$this->auth}/create_user", $req);
     }
 
     public function login(Request $req)
     {
-        return $this->forward("post", env('AUTH_SERVICE_URL')."/login", $req);
+        return $this->forward("post", "{$this->auth}/login", $req);
     }
 
     public function logout(Request $req)
     {
-        return $this->forward("post", env('AUTH_SERVICE_URL')."/logout", $req);
+        return $this->forward("post", $this->auth . "/logout", $req);
     }
 
     public function forgotPassword(Request $req)
     {
-        return $this->forward("post", "$this->auth/forgot_password", $req);
+        return $this->forward("post", $this->auth . "/forgot", $req);
     }
 
     public function resetPassword(Request $req)
     {
-        return $this->forward("post", "$this->auth/reset_password", $req);
+        return $this->forward("post", $this->auth . "/reset", $req);
     }
-
     // ====================== SERVICIOS ========================
 
     public function serviciosIndex(Request $req)
     {
-        return $this->forward("get", "$this->servicios/servicios/", $req);
+        return $this->forward("get", "{$this->servicios}/servicios/", $req);
     }
-
+   
     public function serviciosStore(Request $req)
     {
-        return $this->forward("post", "$this->servicios/servicios/", $req);
+        return $this->forward("post", "{$this->servicios}/servicios/", $req);
     }
 
     public function serviciosUpdate($id, Request $req)
     {
-        return $this->forward("put", "$this->servicios/servicios/$id/", $req);
+        return $this->forward("put", "{$this->servicios}/servicios/$id/", $req);
     }
 
     public function serviciosDelete($id, Request $req)
     {
-        return $this->forward("delete", "$this->servicios/servicios/$id/", $req);
+        return $this->forward("delete", "{$this->servicios}/servicios/$id/", $req);
 
     }
     public function serviciosShow(Request $req, $id)
