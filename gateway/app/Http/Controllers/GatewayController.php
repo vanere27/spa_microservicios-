@@ -54,17 +54,29 @@ class GatewayController extends Controller
 
     public function createUser(Request $req)
     {
+<<<<<<< HEAD
         return $this->forward("post", "{$this->auth}/create_user", $req);
+=======
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/create_user", $req);
+>>>>>>> desarrollo
     }
 
     public function login(Request $req)
     {
+<<<<<<< HEAD
         return $this->forward("post", "{$this->auth}/login", $req);
+=======
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/login", $req);
+>>>>>>> desarrollo
     }
 
     public function logout(Request $req)
     {
+<<<<<<< HEAD
         return $this->forward("post", $this->auth . "/logout", $req);
+=======
+        return $this->forward("post", env('AUTH_SERVICE_URL')."/logout", $req);
+>>>>>>> desarrollo
     }
 
     public function forgotPassword(Request $req)

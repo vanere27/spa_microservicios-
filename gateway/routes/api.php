@@ -3,6 +3,7 @@
 use App\Http\Controllers\GatewayController;
 
 // AUTH
+<<<<<<< HEAD
 Route::prefix('auth')->group(function () {
     Route::post('login', [GatewayController::class, 'login']);
     Route::post('logout', [GatewayController::class, 'logout']);
@@ -12,6 +13,15 @@ Route::prefix('auth')->group(function () {
 });
 
 
+=======
+Route::prefix('api/auth')->group(function () {
+    Route::post('auth/login', [GatewayController::class, 'login']);
+    Route::post('auth/logout', [GatewayController::class, 'logout']);
+    Route::post('auth/create_user', [GatewayController::class, 'createUser']);
+    Route::post('auth/forgot', [GatewayController::class, 'forgotPassword']);
+    Route::post('auth/reset', [GatewayController::class, 'resetPassword']);
+});
+>>>>>>> desarrollo
 // SERVICIOS
 Route::get('servicios/', [GatewayController::class, 'serviciosIndex']);
 Route::post('servicios/', [GatewayController::class, 'serviciosStore']);

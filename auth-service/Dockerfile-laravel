@@ -1,8 +1,16 @@
 FROM php:8.2-fpm
 
+<<<<<<< HEAD
 # Instala dependencias necesarias
 RUN apt-get update && apt-get install -y libzip-dev zip unzip git curl wget \
     && docker-php-ext-install pdo_mysql zip
+=======
+# Instala dependencias necesarias + dockerize
+RUN apt-get update && apt-get install -y libzip-dev zip unzip git curl wget \
+    && docker-php-ext-install pdo_mysql zip \
+    && wget https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-linux-amd64-v0.7.0.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.7.0.tar.gz
+>>>>>>> desarrollo
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -15,5 +23,10 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 8001
 
+<<<<<<< HEAD
 # Ejecuta php-fpm
 CMD ["sh", "-c", "dockerize -wait tcp://mysql:3306 -timeout 60s php artisan serve --host=0.0.0.0 --port=8001"]
+=======
+# CMD usando dockerize para esperar a MySQL
+CMD dockerize -wait tcp://mysql:3306 -timeout 60s php artisan serve --host=0.0.0.0 --port=8001
+>>>>>>> desarrollo
